@@ -5,28 +5,35 @@ machine_translated_rev: 5decc73b5dc60054f19087d3690c4eb99446a6c3
 
 # 系统。零件 {#system_tables-parts}
 
-包含有关的部分信息 [MergeTree](../../engines/table-engines/mergetree-family/mergetree.md) 桌子
+包含关于 [MergeTree](../../engines/table-engines/mergetree-family/mergetree.md) 表部分的信息
 
-每行描述一个数据部分。
+每行描述一个数据零件。
 
 列:
 
--   `partition` (String) – The partition name. To learn what a partition is, see the description of the [ALTER](../../sql-reference/statements/alter.md#query_language_queries_alter) 查询。
+-   `partition` (String) – 分区名称。要了解什么是分区,请参阅 [ALTER](../../sql-reference/statements/alter.md#query_language_queries_alter) 查询的描述。
 
     格式:
 
     -   `YYYYMM` 用于按月自动分区。
-    -   `any_string` 手动分区时。
+    -   `any_string` 用于手动指定分区。
 
--   `name` (`String`) – Name of the data part.
+-   `name` (`String`) – 数据零件的名称。
+-   `part_type` (`String`) – 数据零件的储存格式。
 
--   `active` (`UInt8`) – Flag that indicates whether the data part is active. If a data part is active, it's used in a table. Otherwise, it's deleted. Inactive data parts remain after merging.
+    可能的值:
+    
+    -   `Wide` 每个列存储在文件系统的一个单独的文件中。
+    -   `Compact` 所有列都存储在文件系统中的一个文件中。
+    数据存储格式由MergeTree表的min_bytes_for_wide_part和min_rows_for_wide_part设置控制。
 
--   `marks` (`UInt64`) – The number of marks. To get the approximate number of rows in a data part, multiply `marks` 通过索引粒度（通常为8192）（此提示不适用于自适应粒度）。
+-   `active` (`UInt8`) – 表示数据部分是否活跃的标志。如果数据部分是活跃的，则说明表中使用它。否则，表示删除。未激活的数据零件在合并后仍然存在。
 
--   `rows` (`UInt64`) – The number of rows.
+-   `marks` (`UInt64`) – 标记的数量。表示数据零件中的大致行数，multiply `marks` 通过索引粒度（通常为8192）（此提示不适用于自适应粒度）。
 
--   `bytes_on_disk` (`UInt64`) – Total size of all the data part files in bytes.
+-   `rows` (`UInt64`) – 行数。
+
+-   `bytes_on_disk` (`UInt64`) – 所有数据部分文件的总大小(以字节为单位)。
 
 -   `data_compressed_bytes` (`UInt64`) – Total size of compressed data in the data part. All the auxiliary files (for example, files with marks) are not included.
 
